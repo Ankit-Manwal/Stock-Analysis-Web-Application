@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderLust</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+    <!-- <link rel="stylesheet" href="../static/css/navbar.css">
+    <link rel="stylesheet" href="../static/css/gainer_loser.css"> -->
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">  
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gainer_loser.css') }}"> 
+    
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"> </i></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="/explore">Explore</a>
+                        <a class="nav-link" href="/watchlist">Watchlist</a>
+                    </div>
+                    <div class="navbar-nav ms-auto">
+                        <form method="GET" action="/stock_show" class="d-flex nav_search">
+                            <input class="form-control mr-sm-2" name="stock" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search</button>
+                        </form>   
+                        {% if current_user.is_anonymous %}
+                        <a class="nav-link" href="/signUp">Sign Up</a>
+                        <a class="nav-link" href="/login">Login</a>
+                        {% else %}
+                        <a class="nav-link" href="/logout">Logout</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+
+            
+       
+            <div  class="main-container ">
+
+                    <h2 class="text-center mt-3">Stock Analysis</h2>
+                    <form method="GET" action="/stock_show" class="mb-4 mt-3">
+                        <div class="input-group">
+                            <input type="text" name="stock" class="form-control" placeholder="Enter Stock Symbol (e.g., POWERGRID.NS)">
+                            <button type="submit" class="btn btn-primary">Analyze</button>
+                        </div>
+                    </form>
+                    
+                    
+                <div class="gainer">
+
+                        <h2 class="text-center mb-4">Top 15 Gainers</h2>
+                        <div class="row">
+
+                            {% if top_gainers %}
+                            {% for stock in top_gainers %}
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                    <a href="/stock_show/{{ stock.SYMBOL }}.NS" class="gainer_loser_links">
+                                        <div class="card widget-flat">
+                                            <div class="card-body position-relative">
+                                                
+                                                <!-- Add to Watchlist Button (Star Button) in Upper Right Corner) -->
+                                                {% if  not current_user.is_anonymous  and ( stock['SYMBOL']+'.NS' in current_user.watchlist)  %}
+                                                    <form action="/remove_watchlist" method="POST" class="position-absolute top-0 end-0 p-2">
+                                                        <input type="hidden" name="stock_symbol" value="{{ stock['SYMBOL'] }}.NS">
+                                                        <button type="submit" class="btn btn-link">
+                                                            <i class="bi bi-star-fill" style="font-size: 24px; color: gold;" title="Remove from Watchlist"></i>
+                                                        </button>
+                                                    </form>
+                                                {% else %}
+                                                    <form action="/add_watchlist" method="POST" class="position-absolute top-0 end-0 p-2">
+                                                        <input type="hidden" name="stock_symbol" value="{{ stock['SYMBOL'] }}.NS">
+                                                        <button type="submit" class="btn btn-link">
+                                                            <i class="bi bi-star" style="font-size: 24px; color: grey;" title="Add to Watchlist"></i>
+                                                        </button>
+                                                </form>
+                                                {% endif %}
+
+                                                <div class="float-end">
+                                                    <i class="mdi mdi-trending-up widget-icon text-success"></i>
+                                                </div>
+                                                <h5 class="text-muted fw-normal mt-0" title="{{ stock['SYMBOL'] }}">{{ stock.SYMBOL }}</h5>
+                                                <h3 class="mt-3 mb-3">  {{ stock.CLOSE_PRICE | round(2) }}</h3>
+                                                <p class="mb-0 text-muted">
+                                                    <span class="text-success me-2"><i class="bi bi-arrow-up"></i> {{ stock.PERCENT_CHANGE | round(2) }}%</span>
+                                                    <span class="text-nowrap">Prev: {{ stock.PREV_CLOSE | round(2)   }}</span>
+                                                </p>
+
+                                            </div> 
+                                        </div>
+                                    </a>
+                                </div>   
+                            {% endfor %}
+                            {% else %}
+                                <p>No data available for gainers.</p>
+                            {% endif %}
+                        </div>
+
+                </div>
+
+            
+                <div class="loser">
+
+                        <h2 class="text-center mb-4">Top 15 Losers</h2>
+                        <div class="row ">
+                            {% if top_losers %}
+                            {% for stock in top_losers %}
+                                <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4">
+                                        <div class="card widget-flat">
+                                            <a href="/stock_show/{{ stock.SYMBOL }}.NS" class="gainer_loser_links">
+                                                <div class="card-body">
+
+                                                    <!-- Add to Watchlist Button (Star Button) in Upper Right Corner) -->
+                                                    {% if  not current_user.is_anonymous  and ( stock['SYMBOL']+'.NS' in current_user.watchlist)  %}
+                                                        <form action="/remove_watchlist" method="POST" class="position-absolute top-0 end-0 p-2">
+                                                            <input type="hidden" name="stock_symbol" value="{{ stock['SYMBOL'] }}.NS">
+                                                            <button type="submit" class="btn btn-link">
+                                                                <i class="bi bi-star-fill" style="font-size: 24px; color: gold;" title="Remove from Watchlist"></i>
+                                                            </button>
+                                                        </form>
+                                                    {% else %}
+                                                        <form action="/add_watchlist" method="POST" class="position-absolute top-0 end-0 p-2">
+                                                            <input type="hidden" name="stock_symbol" value="{{ stock['SYMBOL'] }}.NS">
+                                                            <button type="submit" class="btn btn-link">
+                                                                <i class="bi bi-star" style="font-size: 24px; color: grey;" title="Add to Watchlist"></i>
+                                                            </button>
+                                                    </form>
+                                                    {% endif %}
+
+                                                    <div class="float-end">
+                                                        <i class="mdi mdi-trending-down widget-icon text-danger"></i>
+                                                    </div>
+                                                    <h5 class="text-muted fw-normal mt-0" title="{{ stock['SYMBOL'] }}">{{ stock.SYMBOL }}</h5>
+                                                    <h3 class="mt-3 mb-3">{{ stock.CLOSE_PRICE  | round(2) }}</h3>
+                                                    <p class="mb-0 text-muted">
+                                                        <span class="text-danger me-2"><i class="bi bi-arrow-down"></i> {{ stock.PERCENT_CHANGE | round(2) }}%</span>
+                                                        <span class="text-nowrap">Prev: {{ stock.PREV_CLOSE  | round(2) }}</span>
+                                                    </p>
+                                                </div>
+                                            </a> 
+                                        </div> 
+                                </div>
+                            {% endfor %}
+                            {% else %}
+                                <p>No data available for losers.</p>
+                            {% endif %}
+                        </div>
+
+                </div>
+
+            </div> 
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

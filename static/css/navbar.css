@@ -1,0 +1,28 @@
+/*----------------------------- navbar--------------------------- */
+
+
+.fa-compass {
+    color: rgb(210, 59, 59);
+    font-size: 2rem;
+}
+
+.nav-link {
+    color: #222222 !important;
+    font-weight: bold;
+}
+
+.navbar {
+    justify-content: space-between; 
+    align-items: center;
+    height: 5rem;
+    background-color: #4d4d4d; 
+    padding: 0 20px; 
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); 
+    position: fixed; 
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000; 
+}
+
+/*----------------------------- navbar--------------------------- */

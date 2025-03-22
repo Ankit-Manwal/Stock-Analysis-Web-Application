@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderLust</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+    <!-- <link rel="stylesheet" href="../static/css/stock_show.css"> 
+    <link rel="stylesheet" href="../static/css/menubar.css">
+     <link rel="stylesheet" href="../static/css/navbar.css"> -->
+    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/stock_show.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menubar.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+</head>
+
+<body>
+
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><i class="fa-regular fa-compass"> </i></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+                    <div class="navbar-nav">
+                        <a class="nav-link" href="/">Home</a>
+                        <a class="nav-link" href="/explore">Explore</a>
+                        <a class="nav-link" href="/watchlist">Watchlist</a>
+                    </div>
+                    <div class="navbar-nav ms-auto">
+                        <form method="GET" action="/stock_show" class="d-flex nav_search">
+                            <input class="form-control mr-sm-2" name="stock" type="search" placeholder="Search" aria-label="Search">
+                            <button class="btn btn-outline-success my-2 my-sm-0 " type="submit">Search</button>
+                        </form>   
+                        {% if current_user.is_anonymous %}
+                        <a class="nav-link" href="/signUp">Sign Up</a>
+                        <a class="nav-link" href="/login">Login</a>
+                        {% else %}
+                        <a class="nav-link" href="/logout">Logout</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+            <!-- Sidebar Navigation -->
+            <div class="navbar--container sticky">
+                <div class="navbar--title">
+                    <h4>navigation</h4>
+                </div>
+                <div class="navbar--icon"><i class="fas fa-bars"></i></div>
+            </div>
+
+            <div class="nav--open close sticky" id="slider">
+                <div class="nav--open-icon"><i class="fas fa-times"></i></div>
+                <div class="nav--open-title">Menu</div>
+                <div class="nav--open-menu">
+                    <a href="/stock_show/{{stockname}}">Analyse</a>
+                    <a href="/stock_show/predict/{{stockname}}">Stock Predictor</a>
+                    <a href="/stock_show/{{stockname}}/news">News</a>
+                    <a href="/stock_show/{{stockname}}/reviews">Reviews</a>
+                    <a href="">About</a>
+                    <a href="">contact</a>
+                </div>
+            </div>
+    
+
+        <div class="main-content col-11 position-relative">
+
+            <!-- Add to Watchlist Button (Star Button) in Upper Right Corner) -->
+            {% if  not current_user.is_anonymous  and (stockname in current_user.watchlist)  %}
+                <form action="/remove_watchlist" method="POST" class="position-absolute top-0 end-0 p-2">
+                    <input type="hidden" name="stock_symbol" value="{{ stockname }}">
+                    <button type="submit" class="btn btn-link">
+                        <i class="bi bi-star-fill" style="font-size: 24px; z-index: 1000 ; color: gold;" title="Remove from Watchlist"></i>
+                    </button>
+                </form>
+            {% else %}
+                <form action="/add_watchlist" method="POST" class="position-absolute top-0 end-0 p-2">
+                    <input type="hidden" name="stock_symbol" value="{{ stockname}}">
+                    <button type="submit" class="btn btn-link">
+                        <i class="bi bi-star" style="font-size: 24px; z-index: 1000 ; color: grey;" title="Add to Watchlist"></i>
+                    </button>
+            </form>
+            {% endif %}
+
+            <!-- Stock Name -->
+            <h1 class="text-center">
+                {% if stockname %}
+                    <span class="text-primary">{{ stockname }}</span>
+                {% else %}
+                    <span class="text-primary">Stock</span>
+                {% endif %}
+            </h1>
+
+            
+            <form method="GET" action="/stock_show" class="mb-4 mt-5">
+                <div class="input-group">
+                    <input type="text" name="stock" class="form-control" placeholder="Enter Stock Symbol (e.g., POWERGRID.NS)">
+                    <button type="submit" class="btn btn-primary">Analyze</button>
+                </div>
+            </form>
+
+
+            <!-- Main Content -->
+            <div class="container mt-2">
+
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ stockname }}</h5>
+                                <p class="card-text">Current Stock Price/Closing price: <strong>{{ curr_stock_price | round(2)}}</strong></p>
+                            </div>
+                        </div>
+        
+                        <!-- Navigation Buttons -->
+                        <div class="btn-group mb-4 mt-1" role="group" aria-label="Card Switcher">
+                            <button type="button" class="btn btn-outline-primary" onclick="showCard('descCard')">Descriptive Data</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="showCard('emaCard')">EMA Charts</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="showCard('lineGraphCard')">Line Graph</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="showCard('candlestickCard')">Candlestick Chart</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="showCard('volumeGraphCard')">Volume Graph</button>
+                            <button type="button" class="btn btn-outline-primary" onclick="showCard('downloadCard')">Download Dataset</button>
+                        </div>
+                    
+                        <!-- Display Descriptive Data -->
+                        <div id="descCard" class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">Stock Descriptive Dat</h5>
+                                <iframe src="{{ url_for('static', filename=describe_path) }}" width="100%" height="600px"></iframe>
+                                
+                            </div>
+                        </div>
+                    
+                        <!-- Display EMA Charts -->
+                        <div id="emaCard" class="card d-none">
+                            <div class="card-body">
+                                <h5 class="card-title">EMA 20 & 50</h5>
+                                <iframe src="{{ url_for('static', filename=ema20_50_path) }}" width="100%" height="600px" ></iframe>
+                                
+                                <h5 class="card-title">EMA 100 & 200</h5>
+                                <iframe src="{{ url_for('static', filename=ema100_200_path) }}" width="100%" height="600px"></iframe>
+                            </div>
+                        </div>
+
+                    
+                        <!-- Line Graph -->
+                        <div id="lineGraphCard" class="card d-none">
+                            <div class="card-body">
+                                <h5 class="card-title">Stock Line Graph</h5>
+                                <iframe src="{{ url_for('static', filename=line_graph_path) }}" width="100%" height="600px"></iframe>
+                            </div>
+                        </div>
+
+                        <!-- Candlestick Chart -->
+                        <div id="candlestickCard" class="card d-none">
+                            <div class="card-body">
+                                <h5 class="card-title">Stock Candlestick Chart</h5>
+                                <iframe src="{{ url_for('static', filename=candlestick_path) }}" width="100%" height="600px"></iframe>
+                            </div>
+                        </div>
+
+                        <!-- Volume Graph -->
+                        <div id="volumeGraphCard" class="card d-none">
+                            <div class="card-body">
+                                <h5 class="card-title">Stock Volume Graph</h5>
+                                <iframe src="{{ url_for('static', filename=Volume_path) }}" width="100%" height="600px"></iframe>
+                            </div>
+                        </div>
+                    
+                        <!-- Dataset Download -->
+                        <div id="downloadCard" class="card d-none">
+                            <div class="card-body">
+                                <h5 class="card-title">Download Dataset</h5>
+                                <a href="/download/{{ stock_dataset_path }}" class="btn btn-success">Download CSV</a>
+                            </div>
+                        </div>
+            </div>
+    </div>
+
+    
+    <!-- JS Script for Toggle -->
+    <script>
+        let open = document.querySelector('.navbar--icon');
+        let menu = document.querySelector('.nav--open');
+        let close = document.querySelector('.nav--open-icon');
+
+        open.addEventListener('click', function () {
+            menu.classList.toggle('close');
+        });
+
+        close.addEventListener('click', function () {
+            menu.classList.toggle('close');
+        });
+    </script>
+
+    <script>
+        function showCard(cardId) {
+            // Hide all cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => card.classList.add('d-none'));
+
+            // Show the selected card
+            const selectedCard = document.getElementById(cardId);
+            if (selectedCard) {
+                selectedCard.classList.remove('d-none');
+            }
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+</body>
+
+</html>

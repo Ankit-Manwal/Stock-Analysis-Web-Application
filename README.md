@@ -37,7 +37,7 @@ The Stock Analysis Web Application is a powerful tool designed to provide real-t
 ## Usage
 1. Run the Flask server:
    ```bash
-   python app.py
+   python lapp.py
    ```
 
 2. Open your browser and visit:
@@ -49,5 +49,4 @@ The Stock Analysis Web Application is a powerful tool designed to provide real-t
 Contributions are welcome! Feel free to open issues or submit pull requests.
 
 ## License
-This project is licensed under the MIT License.
-
+*******************************

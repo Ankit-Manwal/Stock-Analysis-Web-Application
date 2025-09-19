@@ -1,0 +1,31 @@
+# Ignore virtual environment
+env/
+venv/
+
+# Ignore VS Code settings
+.vscode/
+
+# Ignore session/cache folders
+flask_session/
+
+# Ignore Jupyter Notebook checkpoints and temp files
+*.ipynb_checkpoints
+*.ipynb~
+
+# Ignore Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Ignore local folders
+nsetools-master/
+
+# Ignore generated HTML or temporary files
+.chart_html/
+
+# Ignore specific notebook copies
+Stock Price PredictionCopy.ipynb
+
+# Ignore old backup files
+old_app.py

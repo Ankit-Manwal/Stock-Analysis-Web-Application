@@ -60,7 +60,7 @@
             <div  class="main-container ">
                 <h2 class="text-center mb-4">{{g.current_user.username}}'s Watchlist</h2>
 
-                <form method="POST" action="/stock_show" class="mb-4 mt-3">
+                <form method="GET" action="/stock_show" class="mb-4 mt-3">
                     <div class="input-group">
                         <input type="text" name="stock" class="form-control" placeholder="Enter Stock Symbol (e.g., POWERGRID.NS)">
                         <button type="submit" class="btn btn-primary">Analyze</button>

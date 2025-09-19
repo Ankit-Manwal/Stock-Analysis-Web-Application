@@ -151,13 +151,13 @@ def stock_show(stock_symbol=None):
 
 
         #paths
-        ema20_50_path="./static/ema_20_50_chart.html"
-        ema100_200_path="./static/ema_100_200_chart.html"
-        Volume_path="./static/Volume_Over_Time_chart.html"
-        line_graph_path="./static/Line_Graph_chart.html"
-        candlestick_path="./static/Candlestick_chart.html"
-        describe_path="./static/describe.html"
-        stock_dataset_path="./static/stock_dataset.csv"
+        ema20_50_path="./static/chart_html/ema_20_50_chart.html"
+        ema100_200_path="./static/chart_html/ema_100_200_chart.html"
+        Volume_path="./static/chart_html/Volume_Over_Time_chart.html"
+        line_graph_path="./static/chart_html/Line_Graph_chart.html"
+        candlestick_path="./static/chart_html/Candlestick_chart.html"
+        describe_path="./static/chart_html/describe.html"
+        stock_dataset_path="./static/chart_html/stock_dataset.csv"
 
         # all stock Data*************************************************************************************************************************************************
         df.to_csv(stock_dataset_path)
@@ -408,7 +408,7 @@ def predict(stock_symbol=None):
 
 
         #paths
-        Prediction_path_chart="./static/prediction_vs_original_trend.html"
+        Prediction_path_chart="./static/chart_html/prediction_vs_original_trend.html"
 
 
         # Data splitting
@@ -961,22 +961,27 @@ def stock_news(stockname):
         
         stock = yf.Ticker(stockname)  
         
-        news = stock.news
-
-        # Extract the required fields from each article
+        news = stock.news or []
         news_data = []
-        for article in news:
-            content = article.get('content', {})
-            news_data.append({
-                'canonicalUrl': content.get('canonicalUrl', {}).get('url', 'No URL available'),
-                'title': content.get('title', 'No title available'),
-                'summary': content.get('summary', 'No summary available'),
-                'pubDate': content.get('pubDate', 'No publish date available'),
-                'thumbnail_original': content.get('thumbnail', {}).get('originalUrl', 'No thumbnail available'),
-                'provider_name': content.get('provider', {}).get('displayName', 'Unknown provider'),
-                'provider_url': content.get('provider', {}).get('url', 'No provider URL available'),
-            })
-        print(news_data)
+        if  news:
+            # Extract the required fields from each article
+            for article in news:
+                content = article.get('content', {})
+                # Safely extract nested data with proper null checks
+                canonical_url = content.get('canonicalUrl')
+                thumbnail = content.get('thumbnail')
+                provider = content.get('provider')
+                
+                news_data.append({
+                    'canonicalUrl': canonical_url.get('url', 'No URL available') if canonical_url else 'No URL available',
+                    'title': content.get('title', 'No title available'),
+                    'summary': content.get('summary', 'No summary available'),
+                    'pubDate': content.get('pubDate', 'No publish date available'),
+                    'thumbnail_original': thumbnail.get('originalUrl', 'No thumbnail available') if thumbnail else 'No thumbnail available',
+                    'provider_name': provider.get('displayName', 'Unknown provider') if provider else 'Unknown provider',
+                    'provider_url': provider.get('url', 'No provider URL available') if provider else 'No provider URL available',
+                })
+        print("\n",news_data)
         return render_template('news.html', stockname=stockname, news_data=news_data)
     
     except Exception as e:

@@ -22,7 +22,7 @@ __pycache__/
 nsetools-master/
 
 # Ignore generated HTML or temporary files
-.chart_html/
+chart_html/
 
 # Ignore specific notebook copies
 Stock Price PredictionCopy.ipynb

@@ -141,7 +141,7 @@
                         <div id="descCard" class="card">
                             <div class="card-body">
                                 <h5 class="card-title">Stock Descriptive Dat</h5>
-                                <iframe src="{{ url_for('static', filename=describe_path) }}" width="100%" height="600px"></iframe>
+                                <iframe src="{{ url_for('static', filename='chart_html/' + describe_path) }}" width="100%" height="600px"></iframe>
                                 
                             </div>
                         </div>
@@ -150,10 +150,10 @@
                         <div id="emaCard" class="card d-none">
                             <div class="card-body">
                                 <h5 class="card-title">EMA 20 & 50</h5>
-                                <iframe src="{{ url_for('static', filename=ema20_50_path) }}" width="100%" height="600px" ></iframe>
+                                <iframe src="{{ url_for('static', filename='chart_html/' + ema20_50_path) }}" width="100%" height="600px" ></iframe>
                                 
                                 <h5 class="card-title">EMA 100 & 200</h5>
-                                <iframe src="{{ url_for('static', filename=ema100_200_path) }}" width="100%" height="600px"></iframe>
+                                <iframe src="{{ url_for('static', filename='chart_html/' + ema100_200_path) }}" width="100%" height="600px"></iframe>
                             </div>
                         </div>
 
@@ -162,7 +162,7 @@
                         <div id="lineGraphCard" class="card d-none">
                             <div class="card-body">
                                 <h5 class="card-title">Stock Line Graph</h5>
-                                <iframe src="{{ url_for('static', filename=line_graph_path) }}" width="100%" height="600px"></iframe>
+                                <iframe src="{{ url_for('static', filename='chart_html/' + line_graph_path) }}" width="100%" height="600px"></iframe>
                             </div>
                         </div>
 
@@ -170,7 +170,7 @@
                         <div id="candlestickCard" class="card d-none">
                             <div class="card-body">
                                 <h5 class="card-title">Stock Candlestick Chart</h5>
-                                <iframe src="{{ url_for('static', filename=candlestick_path) }}" width="100%" height="600px"></iframe>
+                                <iframe src="{{ url_for('static', filename='chart_html/' + candlestick_path) }}" width="100%" height="600px"></iframe>
                             </div>
                         </div>
 
@@ -178,7 +178,7 @@
                         <div id="volumeGraphCard" class="card d-none">
                             <div class="card-body">
                                 <h5 class="card-title">Stock Volume Graph</h5>
-                                <iframe src="{{ url_for('static', filename=Volume_path) }}" width="100%" height="600px"></iframe>
+                                <iframe src="{{ url_for('static', filename='chart_html/' + Volume_path) }}" width="100%" height="600px"></iframe>
                             </div>
                         </div>
                     
@@ -186,7 +186,7 @@
                         <div id="downloadCard" class="card d-none">
                             <div class="card-body">
                                 <h5 class="card-title">Download Dataset</h5>
-                                <a href="/download/{{ stock_dataset_path }}" class="btn btn-success">Download CSV</a>
+                                <a href="{{ url_for('static', filename='chart_html/' + stock_dataset_path) }}" class="btn btn-success">Download CSV</a>
                             </div>
                         </div>
             </div>

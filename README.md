@@ -2,7 +2,7 @@
 
 A comprehensive web application for stock market analysis, prediction, and portfolio management built with Flask and machine learning.
 
-## 🌟 Features
+## 🌟 Feature
 
 ### 📊 Stock Analysis
 - **Real-time Stock Data**: Get live stock prices and historical data using Yahoo Finance API
